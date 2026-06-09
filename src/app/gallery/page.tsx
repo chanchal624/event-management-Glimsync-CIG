@@ -198,10 +198,9 @@ export default function PublicGallery() {
         <div style={{ textAlign: "center", padding: "5rem" }}>
           <div style={{ display: "inline-block", width: "50px", height: "50px", border: "4px solid rgba(99,102,241,0.2)", borderTopColor: "#6366f1", borderRadius: "50%", animation: "spin 1s linear infinite" }}></div>
         </div>
-      ) : (
+      ) : filteredMedia.length > 0 ? (
         <div className="masonry">
-          {filteredMedia.length > 0 ? (
-            filteredMedia.map((item, idx) => (
+          {filteredMedia.map((item, idx) => (
               <div key={item.id} id={`media-${item.id}`} className="masonry-item">
                 <div
                   className="gallery-card glass-panel"
@@ -337,11 +336,13 @@ export default function PublicGallery() {
                 </div>
               </div>
             ))
-          ) : (
-            <div style={{ textAlign: "center", padding: "4rem", gridColumn: "1 / -1", width: "100%" }}>
-              <h3 style={{ color: "#475569", fontSize: "1.5rem" }}>No results found for "{searchQuery}"</h3>
-            </div>
-          )}
+          }
+        </div>
+      ) : (
+        <div style={{ textAlign: "center", padding: "4rem", width: "100%" }}>
+          <h3 style={{ color: "#475569", fontSize: "1.5rem" }}>
+            {searchQuery ? `No results found for "${searchQuery}"` : "No results found"}
+          </h3>
         </div>
       )}
 
