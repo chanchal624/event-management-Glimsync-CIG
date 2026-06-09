@@ -503,17 +503,8 @@ export default function EventGalleryPage() {
                   value={staged.caption}
                   onChange={e => setStagedFiles(prev => prev.map((s, i) => i === idx ? { ...s, caption: e.target.value } : s))}
                   placeholder="write caption"
-                  style={{ width: "100%", height: "60px", padding: "0.75rem", borderRadius: "8px", background: "var(--bg-secondary)", border: "1px solid var(--glass-border)", color: "#0f172a", fontSize: "0.85rem", resize: "none", marginBottom: "0.5rem", outline: "none" }}
+                  style={{ width: "100%", height: "60px", padding: "0.75rem", borderRadius: "8px", background: "var(--bg-secondary)", border: "1px solid var(--glass-border)", color: "#0f172a", fontSize: "0.85rem", resize: "none", outline: "none" }}
                 />
-
-                <button
-                  onClick={() => handleGenerateAI(idx)}
-                  disabled={staged.isGeneratingAI}
-                  style={{ width: "100%", padding: "0.5rem", background: "var(--glass-bg)", color: "#475569", border: "1px solid var(--glass-border)", borderRadius: "6px", cursor: "pointer", fontSize: "0.85rem", display: "flex", justifyContent: "center", alignItems: "center", gap: "0.5rem", transition: "all 0.2s" }}
-                  className="hover-bg"
-                >
-                  <Sparkles size={14} /> {staged.isGeneratingAI ? "Generating..." : "Auto-generate"}
-                </button>
               </div>
             ))}
           </div>
