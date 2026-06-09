@@ -17,6 +17,9 @@ interface MediaItem {
   metadata?: any;
   folderId?: string | null;
   userTags?: { taggedUser: { id: string; name: string; email: string; referenceImageUrl?: string } }[];
+  uploader?: { id: string; name: string | null; email: string | null };
+  uploadDate?: string | Date;
+  comments?: any[];
 }
 
 interface Folder {
@@ -664,17 +667,17 @@ export default function EventGalleryPage() {
                 </div>
               </div>
 
-              {(currentMedia.metadata?.caption || currentMedia.tags?.length > 0) && (
+              {(currentMedia.metadata?.caption || (currentMedia.tags?.length ?? 0) > 0) && (
                 <div style={{ background: "rgba(99,102,241,0.05)", padding: "1rem", borderRadius: "8px", border: "1px solid rgba(99,102,241,0.1)" }}>
                   {currentMedia.metadata?.caption && !currentMedia.metadata.caption.includes("Failed to generate") && !currentMedia.metadata.caption.includes("AI Analysis disabled") && (
-                    <p style={{ fontSize: "0.95rem", color: "#0f172a", marginBottom: currentMedia.tags?.length > 0 ? "0.8rem" : "0", fontStyle: "italic", lineHeight: "1.5", margin: "0" }}>
+                    <p style={{ fontSize: "0.95rem", color: "#0f172a", marginBottom: (currentMedia.tags?.length ?? 0) > 0 ? "0.8rem" : "0", fontStyle: "italic", lineHeight: "1.5", margin: "0" }}>
                       "{currentMedia.metadata.caption.replace(/#\w+/g, '').trim()}"
                     </p>
                   )}
 
-                  {currentMedia.tags?.length > 0 && (
+                  {(currentMedia.tags?.length ?? 0) > 0 && (
                     <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginTop: currentMedia.metadata?.caption ? "0.5rem" : "0" }}>
-                      {currentMedia.tags.map((t: any) => (
+                      {currentMedia.tags?.map((t: any) => (
                         <span key={t.id || t.tag?.id} style={{ fontSize: "0.85rem", color: "#6366f1", fontWeight: "500" }}>
                           #{t.tag?.name || t.name?.replace(/\s+/g, "")}
                         </span>
@@ -682,13 +685,13 @@ export default function EventGalleryPage() {
                     </div>
                   )}
 
-                  {currentMedia.userTags?.length > 0 && (
+                  {(currentMedia.userTags?.length ?? 0) > 0 && (
                     <div style={{ marginTop: "1rem", paddingTop: "0.5rem", borderTop: "1px dashed rgba(99,102,241,0.2)" }}>
                       <span style={{ fontSize: "0.8rem", color: "#475569", fontWeight: "bold", display: "block", marginBottom: "0.5rem" }}>
                         👤 Recognized People
                       </span>
                       <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
-                        {currentMedia.userTags.map((ut: any) => (
+                        {currentMedia.userTags?.map((ut: any) => (
                           <Link key={ut.taggedUser.id} href={`/profile/${ut.taggedUser.id}`} style={{ textDecoration: "none" }} onClick={() => setSelectedIndex(null)}>
                             <span style={{ background: "var(--glass-bg)", border: "1px solid var(--glass-border)", padding: "0.3rem 0.6rem", borderRadius: "9999px", fontSize: "0.8rem", color: "#0f172a", display: "flex", alignItems: "center", gap: "0.25rem" }} className="hover-lift">
                               {ut.taggedUser.name || ut.taggedUser.email.split('@')[0]}
@@ -703,8 +706,8 @@ export default function EventGalleryPage() {
             </div>
 
             <div style={{ flex: 1, overflowY: "auto", padding: "1.5rem", display: "flex", flexDirection: "column", gap: "1rem" }}>
-              {currentMedia.comments?.length > 0 ? (
-                currentMedia.comments.map((c: any) => (
+              {(currentMedia.comments?.length ?? 0) > 0 ? (
+                currentMedia.comments?.map((c: any) => (
                   <div key={c.id} style={{ display: "flex", gap: "0.75rem" }}>
                     <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: "var(--glass-border)", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold", fontSize: "0.8rem", color: "#475569" }}>
                       {c.user?.name ? c.user.name.charAt(0).toUpperCase() : "U"}
@@ -734,11 +737,11 @@ export default function EventGalleryPage() {
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <div style={{ display: "flex", gap: "1rem" }}>
                   <button
-                    onClick={() => handleLike(currentMedia.id)}
-                    style={{ background: "none", border: "none", cursor: "pointer", padding: 0, color: currentMedia.likes?.length > 0 ? "#ef4444" : "#475569", transition: "transform 0.1s" }}
+                    onClick={() => handleToggleLike(currentMedia.id)}
+                    style={{ background: "none", border: "none", cursor: "pointer", padding: 0, color: (currentMedia.likes?.length ?? 0) > 0 ? "#ef4444" : "#475569", transition: "transform 0.1s" }}
                     className="hover-scale"
                   >
-                    <Heart size={24} fill={currentMedia.likes?.length > 0 ? "currentColor" : "none"} strokeWidth={2} />
+                    <Heart size={24} fill={(currentMedia.likes?.length ?? 0) > 0 ? "currentColor" : "none"} strokeWidth={2} />
                   </button>
                   <button
                     style={{ background: "none", border: "none", cursor: "pointer", padding: 0, color: "#475569", transition: "transform 0.1s" }}

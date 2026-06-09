@@ -10,6 +10,7 @@ interface Notification {
   read: boolean;
   createdAt: string;
   actor: { name: string };
+  media?: { s3Url?: string };
 }
 
 export default function NotificationBell() {
