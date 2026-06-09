@@ -109,8 +109,8 @@ export default function DownloadsPage() {
         __html: `
         .masonry { column-count: 1; column-gap: 1.5rem; }
         @media (min-width: 640px) { .masonry { column-count: 2; } }
-        @media (min-width: 1024px) { .masonry { column-count: 3; } }
-        @media (min-width: 1400px) { .masonry { column-count: 4; } }
+        @media (min-width: 768px) { .masonry { column-count: 3; } }
+        @media (min-width: 1024px) { .masonry { column-count: 4; } }
         .masonry-item { break-inside: avoid; margin-bottom: 1.5rem; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
       `}} />
