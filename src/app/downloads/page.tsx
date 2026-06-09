@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { createPortal } from "react-dom";
+import { ArrowLeft } from "lucide-react";
 
 export default function DownloadsPage() {
   const [downloads, setDownloads] = useState<any[]>([]);
@@ -29,15 +30,18 @@ export default function DownloadsPage() {
   const activeDownload = activeMediaIndex !== null ? downloads[activeMediaIndex] : null;
 
   return (
-    <div className="animate-fade-in" style={{ padding: "2rem", maxWidth: "1600px", margin: "0 auto" }}>
-      <div style={{ textAlign: "center", marginBottom: "3rem" }}>
+    <div className="animate-fade-in" style={{ padding: "4rem", maxWidth: "1200px", margin: "0 auto" }}>
+      <div style={{ marginBottom: "1.5rem" }}>
+        <Link href="/profile" style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", color: "#64748b", textDecoration: "none", fontSize: "0.95rem", fontWeight: "600" }} className="hover-underline">
+          <ArrowLeft size={18} /> Back to Profile
+        </Link>
+      </div>
+
+      <div style={{ marginBottom: "3rem" }}>
         <h1 className="hero-title" style={{ fontSize: "3rem", marginBottom: "0.5rem" }}>My Downloads</h1>
-        <p className="hero-subtitle" style={{ maxWidth: "600px", margin: "0 auto", marginBottom: "2rem" }}>
+        <p className="hero-subtitle" style={{ marginBottom: "0" }}>
           A record of all the memories you've saved to your device.
         </p>
-        <Link href="/profile" className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}>
-          ← Back to Profile
-        </Link>
       </div>
 
       {loading ? (

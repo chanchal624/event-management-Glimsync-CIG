@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { ArrowLeft, Download } from "lucide-react";
 
 interface TagItem {
   id: string;
@@ -47,14 +48,15 @@ export default function TaggedPage() {
 
   return (
     <div className="animate-fade-in" style={{ padding: "4rem", maxWidth: "1200px", margin: "0 auto" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "3rem" }}>
-        <div>
-          <h1 className="hero-title" style={{ fontSize: "3rem", marginBottom: "0.5rem" }}>Tagged Photos</h1>
-          <p className="hero-subtitle" style={{ marginBottom: "0" }}>Images where other users have manually tagged you</p>
-        </div>
-        <Link href="/profile" className="btn-primary" style={{ textDecoration: "none" }}>
-          ← Back to Profile
+      <div style={{ marginBottom: "1.5rem" }}>
+        <Link href="/profile" style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", color: "#64748b", textDecoration: "none", fontSize: "0.95rem", fontWeight: "600" }} className="hover-underline">
+          <ArrowLeft size={18} /> Back to Profile
         </Link>
+      </div>
+
+      <div style={{ marginBottom: "3rem" }}>
+        <h1 className="hero-title" style={{ fontSize: "3rem", marginBottom: "0.5rem" }}>Tagged Photos</h1>
+        <p className="hero-subtitle" style={{ marginBottom: "0" }}>Images where other users have manually tagged you</p>
       </div>
 
       {error && <div style={{ padding: "1rem", color: "red", border: "1px solid red", marginBottom: "2rem" }}>{error}</div>}
@@ -71,17 +73,41 @@ export default function TaggedPage() {
               <div style={{ position: "relative", width: "100%", height: "250px", borderRadius: "8px", overflow: "hidden", marginBottom: "1rem" }}>
                 <img src={item.media.s3Url} alt="Tagged Media" style={{ objectFit: "cover", width: "100%", height: "100%" }} />
               </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", marginBottom: "1rem" }}>
-                <Link href={`/events/${item.media.event?.id}/gallery`} style={{ fontSize: "0.9rem", color: "#0f172a", fontWeight: "600", textDecoration: "none" }}>
-                  <span style={{ cursor: "pointer" }} onMouseOver={e => e.currentTarget.style.textDecoration = "underline"} onMouseOut={e => e.currentTarget.style.textDecoration = "none"}>
-                    {item.media.event?.name}
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                  <Link href={`/events/${item.media.event?.id}/gallery`} style={{ fontSize: "0.9rem", color: "#0f172a", fontWeight: "600", textDecoration: "none" }}>
+                    <span style={{ cursor: "pointer" }} onMouseOver={e => e.currentTarget.style.textDecoration = "underline"} onMouseOut={e => e.currentTarget.style.textDecoration = "none"}>
+                      {item.media.event?.name}
+                    </span>
+                  </Link>
+                  <span style={{ fontSize: "0.85rem", color: "#475569" }}>
+                    🏷️ Tagged by <Link href={`/profile/${item.tagger.id}`} style={{ color: "#6366f1", fontWeight: "bold", textDecoration: "none" }}><span style={{ cursor: "pointer" }} onMouseOver={e => e.currentTarget.style.textDecoration = "underline"} onMouseOut={e => e.currentTarget.style.textDecoration = "none"}>{item.tagger.name || item.tagger.email}</span></Link>
                   </span>
-                </Link>
-                <span style={{ fontSize: "0.85rem", color: "#475569" }}>
-                  🏷️ Tagged by <Link href={`/profile/${item.tagger.id}`} style={{ color: "#6366f1", fontWeight: "bold", textDecoration: "none" }}><span style={{ cursor: "pointer" }} onMouseOver={e => e.currentTarget.style.textDecoration = "underline"} onMouseOut={e => e.currentTarget.style.textDecoration = "none"}>{item.tagger.name || item.tagger.email}</span></Link>
-                </span>
+                </div>
+                <a
+                  href={`/api/download/${item.media.id}`}
+                  className="hover-scale"
+                  style={{
+                    background: "rgba(255, 255, 255, 0.8)",
+                    border: "1px solid var(--glass-border)",
+                    color: "#475569",
+                    width: "36px",
+                    height: "36px",
+                    borderRadius: "50%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    textDecoration: "none",
+                    boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+                    transition: "transform 0.1s ease",
+                    flexShrink: 0
+                  }}
+                  title="Download"
+                  download
+                >
+                  <Download size={16} />
+                </a>
               </div>
-              <a href={`/api/download/${item.media.id}`} className="btn-primary" style={{ textDecoration: "none", padding: "0.5rem", borderRadius: "6px", textAlign: "center" }}>⬇️ Download</a>
             </div>
           ))}
         </div>
