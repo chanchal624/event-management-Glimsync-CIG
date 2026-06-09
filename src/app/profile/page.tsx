@@ -59,9 +59,9 @@ export default async function UserProfile() {
 
         <div style={{ padding: "0 2rem 2rem", display: "flex", flexDirection: "column", gap: "1rem", position: "relative" }}>
 
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: "1.5rem" }}>
 
-            <div style={{ display: "flex", alignItems: "flex-end", gap: "1.5rem" }}>
+            <div style={{ display: "flex", alignItems: "flex-end", gap: "1.5rem", flexWrap: "wrap" }}>
               <div style={{
                 width: "100px", height: "100px", borderRadius: "50%",
                 marginTop: "-50px",
@@ -98,15 +98,15 @@ export default async function UserProfile() {
               </div>
             </div>
 
-            <div style={{ display: "flex", gap: "0.5rem", paddingBottom: "0.5rem", alignItems: "center" }}>
-              <Link href="/settings" className="hover-scale" style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "32px", gap: "0.4rem", padding: "0 0.8rem", borderRadius: "8px", border: "1px solid var(--glass-border)", background: "white", fontWeight: "600", fontSize: "0.8rem", color: "#0f172a", textDecoration: "none", boxShadow: "0 2px 5px rgba(0,0,0,0.02)" }}>
+            <div style={{ display: "flex", gap: "0.5rem", paddingBottom: "0.5rem", alignItems: "center", flexWrap: "wrap" }}>
+              <Link href="/settings" className="hover-scale" style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "32px", gap: "0.4rem", padding: "0 0.8rem", borderRadius: "8px", border: "1px solid var(--glass-border)", background: "white", fontWeight: "600", fontSize: "0.8rem", color: "#0f172a", textDecoration: "none", boxShadow: "0 2px 5px rgba(0,0,0,0.02)", whiteSpace: "nowrap" }}>
                 <Edit3 size={14} /> Edit Profile
               </Link>
-              <Link href="/recognized" className="hover-scale" style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "32px", gap: "0.4rem", padding: "0 0.8rem", borderRadius: "8px", background: "#0f172a", color: "white", fontWeight: "600", fontSize: "0.8rem", textDecoration: "none", boxShadow: "0 4px 10px rgba(15,23,42,0.2)" }}>
+              <Link href="/recognized" className="hover-scale" style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "32px", gap: "0.4rem", padding: "0 0.8rem", borderRadius: "8px", background: "#0f172a", color: "white", fontWeight: "600", fontSize: "0.8rem", textDecoration: "none", boxShadow: "0 4px 10px rgba(15,23,42,0.2)", whiteSpace: "nowrap" }}>
                 <ImageIcon size={14} /> View My Image
               </Link>
               {isAdmin && (
-                <Link href="/admin" className="hover-scale" style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "32px", gap: "0.4rem", padding: "0 0.8rem", borderRadius: "8px", background: "rgba(239, 68, 68, 0.1)", color: "#ef4444", fontWeight: "600", fontSize: "0.8rem", textDecoration: "none", border: "1px solid rgba(239, 68, 68, 0.2)" }}>
+                <Link href="/admin" className="hover-scale" style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "32px", gap: "0.4rem", padding: "0 0.8rem", borderRadius: "8px", background: "rgba(239, 68, 68, 0.1)", color: "#ef4444", fontWeight: "600", fontSize: "0.8rem", textDecoration: "none", border: "1px solid rgba(239, 68, 68, 0.2)", whiteSpace: "nowrap" }}>
                   <Shield size={14} /> Admin
                 </Link>
               )}

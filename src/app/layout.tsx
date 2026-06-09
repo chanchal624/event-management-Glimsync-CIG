@@ -73,9 +73,7 @@ export default async function RootLayout({
                   <Link href="/register" className="btn-primary" style={{ padding: '0.5rem 1.5rem', textDecoration: 'none', background: 'white', color: '#6366f1', border: '1px solid #6366f1', boxShadow: 'none' }}>Register</Link>
                 </div>
               ) : (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <Link href="/login" className="btn-primary" style={{ padding: '0.5rem 1.5rem', textDecoration: 'none' }}>Login</Link>
-                  <Link href="/register" className="btn-primary" style={{ padding: '0.5rem 1.5rem', textDecoration: 'none', background: 'white', color: '#6366f1', border: '1px solid #6366f1', boxShadow: 'none' }}>Register</Link>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
                   <Link href="/profile" style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', textDecoration: 'none' }} className="hover-scale">
                     <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'linear-gradient(135deg, #6366f1, #d946ef)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '0.9rem', overflow: 'hidden', boxShadow: '0 2px 8px rgba(99,102,241,0.25)' }}>
                       {userAvatar ? (
