@@ -264,33 +264,6 @@ export default function PublicGallery() {
                         ))}
                       </div>
                     )}
-
-                    <button
-                      onClick={(e) => { e.stopPropagation(); handleFavorite(item.id, item.isFavoritedByMe); }}
-                      style={{
-                        position: "absolute",
-                        bottom: "1rem",
-                        right: "1rem",
-                        background: "rgba(255, 255, 255, 0.8)",
-                        backdropFilter: "blur(8px)",
-                        border: "1px solid rgba(255, 255, 255, 0.3)",
-                        borderRadius: "50%",
-                        width: "36px",
-                        height: "36px",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        color: item.isFavoritedByMe ? "#eab308" : "#64748b",
-                        cursor: "pointer",
-                        boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-                        transition: "transform 0.2s ease, background 0.2s ease",
-                        zIndex: 10
-                      }}
-                      className="hover-scale"
-                      title="Favorite"
-                    >
-                      <Star size={18} fill={item.isFavoritedByMe ? "#eab308" : "none"} strokeWidth={item.isFavoritedByMe ? 0 : 2} />
-                    </button>
                   </div>
 
                   <div style={{ padding: "1.25rem", flexGrow: 1, display: "flex", flexDirection: "column", background: "rgba(255,255,255,0.8)" }}>
@@ -356,27 +329,37 @@ export default function PublicGallery() {
                       );
                     })()}
 
-                    <div style={{ color: "#64748b", fontSize: "0.95rem", fontWeight: "600", display: "flex", gap: "1.25rem", marginTop: "auto" }}>
+                    <div style={{ color: "#64748b", fontSize: "0.95rem", fontWeight: "600", display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "auto" }}>
+                      <div style={{ display: "flex", gap: "1.25rem" }}>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); handleLike(item.id, item.isLikedByMe); }}
+                          style={{ background: "none", border: "none", padding: 0, cursor: "pointer", display: "flex", alignItems: "center", gap: "0.4rem", color: item.isLikedByMe ? "#ef4444" : "#64748b", fontWeight: "600", fontSize: "0.95rem", transition: "transform 0.1s" }}
+                          className="hover-scale"
+                        >
+                          <Heart size={16} fill={item.isLikedByMe ? "#ef4444" : "none"} /> {item.likesCount}
+                        </button>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); openModal(idx); setTimeout(() => document.getElementById("commentInput")?.focus(), 100); }}
+                          style={{ background: "none", border: "none", padding: 0, cursor: "pointer", display: "flex", alignItems: "center", gap: "0.4rem", color: "#64748b", fontWeight: "600", fontSize: "0.95rem", transition: "transform 0.1s" }}
+                          className="hover-scale"
+                        >
+                          <MessageCircle size={16} /> {item.commentsCount}
+                        </button>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); handleShare(item.id); }}
+                          style={{ background: "none", border: "none", padding: 0, cursor: "pointer", display: "flex", alignItems: "center", gap: "0.4rem", color: "#64748b", fontWeight: "600", fontSize: "0.95rem", transition: "transform 0.1s" }}
+                          className="hover-scale"
+                        >
+                          <Share2 size={16} /> {item.sharesCount || 0}
+                        </button>
+                      </div>
                       <button
-                        onClick={(e) => { e.stopPropagation(); handleLike(item.id, item.isLikedByMe); }}
-                        style={{ background: "none", border: "none", padding: 0, cursor: "pointer", display: "flex", alignItems: "center", gap: "0.4rem", color: item.isLikedByMe ? "#ef4444" : "#64748b", fontWeight: "600", fontSize: "0.95rem", transition: "transform 0.1s" }}
+                        onClick={(e) => { e.stopPropagation(); handleFavorite(item.id, item.isFavoritedByMe); }}
+                        style={{ background: "none", border: "none", padding: 0, cursor: "pointer", display: "flex", alignItems: "center", color: item.isFavoritedByMe ? "#eab308" : "#64748b", transition: "transform 0.1s" }}
                         className="hover-scale"
+                        title="Favorite"
                       >
-                        <Heart size={16} fill={item.isLikedByMe ? "#ef4444" : "none"} /> {item.likesCount}
-                      </button>
-                      <button
-                        onClick={(e) => { e.stopPropagation(); openModal(idx); setTimeout(() => document.getElementById("commentInput")?.focus(), 100); }}
-                        style={{ background: "none", border: "none", padding: 0, cursor: "pointer", display: "flex", alignItems: "center", gap: "0.4rem", color: "#64748b", fontWeight: "600", fontSize: "0.95rem", transition: "transform 0.1s" }}
-                        className="hover-scale"
-                      >
-                        <MessageCircle size={16} /> {item.commentsCount}
-                      </button>
-                      <button
-                        onClick={(e) => { e.stopPropagation(); handleShare(item.id); }}
-                        style={{ background: "none", border: "none", padding: 0, cursor: "pointer", display: "flex", alignItems: "center", gap: "0.4rem", color: "#64748b", fontWeight: "600", fontSize: "0.95rem", transition: "transform 0.1s" }}
-                        className="hover-scale"
-                      >
-                        <Share2 size={16} /> {item.sharesCount || 0}
+                        <Star size={16} fill={item.isFavoritedByMe ? "#eab308" : "none"} strokeWidth={item.isFavoritedByMe ? 0 : 2} />
                       </button>
                     </div>
                   </div>
