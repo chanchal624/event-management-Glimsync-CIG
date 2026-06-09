@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { ArrowLeft, Download } from "lucide-react";
 
 interface MediaItem {
   id: string;
@@ -43,14 +44,15 @@ export default function FavoritesPage() {
 
   return (
     <div className="animate-fade-in" style={{ padding: "4rem", maxWidth: "1200px", margin: "0 auto" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "3rem" }}>
-        <div>
-          <h1 className="hero-title" style={{ fontSize: "3rem", marginBottom: "0.5rem" }}>My Favorites</h1>
-          <p className="hero-subtitle" style={{ marginBottom: "0" }}>All your starred images in one place</p>
-        </div>
-        <Link href="/profile" className="btn-primary" style={{ textDecoration: "none" }}>
-          ← Back to Profile
+      <div style={{ marginBottom: "1.5rem" }}>
+        <Link href="/profile" style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", color: "#64748b", textDecoration: "none", fontSize: "0.95rem", fontWeight: "600" }} className="hover-underline">
+          <ArrowLeft size={18} /> Back to Profile
         </Link>
+      </div>
+
+      <div style={{ marginBottom: "3rem" }}>
+        <h1 className="hero-title" style={{ fontSize: "3rem", marginBottom: "0.5rem" }}>My Favorites</h1>
+        <p className="hero-subtitle" style={{ marginBottom: "0" }}>All your starred images in one place</p>
       </div>
 
       {error && <div style={{ padding: "1rem", color: "red", border: "1px solid red", marginBottom: "2rem" }}>{error}</div>}
@@ -69,7 +71,28 @@ export default function FavoritesPage() {
               </div>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <span style={{ fontSize: "0.9rem", color: "#475569", fontWeight: "600" }}>{item.event?.name}</span>
-                <a href={`/api/download/${item.id}`} className="btn-primary" style={{ textDecoration: "none", padding: "0.4rem 0.8rem", borderRadius: "6px", fontSize: "0.85rem" }}>⬇️ Download</a>
+                <a
+                  href={`/api/download/${item.id}`}
+                  className="hover-scale"
+                  style={{
+                    background: "rgba(255, 255, 255, 0.8)",
+                    border: "1px solid var(--glass-border)",
+                    color: "#475569",
+                    width: "36px",
+                    height: "36px",
+                    borderRadius: "50%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    textDecoration: "none",
+                    boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+                    transition: "transform 0.1s ease"
+                  }}
+                  title="Download"
+                  download
+                >
+                  <Download size={16} />
+                </a>
               </div>
             </div>
           ))}
