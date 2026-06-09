@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>GlimSync Project Documentation</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            color: #333333;
+            line-height: 1.6;
+            margin: 40px;
+        }
+        h1 {
+            color: #1F4E79;
+            border-bottom: 2px solid #1F4E79;
+            padding-bottom: 5px;
+            font-size: 26pt;
+            margin-top: 30px;
+        }
+        h2 {
+            color: #2E75B6;
+            border-bottom: 1px solid #D3D3D3;
+            padding-bottom: 3px;
+            font-size: 18pt;
+            margin-top: 25px;
+        }
+        h3 {
+            color: #5B9BD5;
+            font-size: 14pt;
+            margin-top: 20px;
+        }
+        p, li {
+            font-size: 11pt;
+        }
+        code {
+            font-family: 'Consolas', 'Courier New', monospace;
+            background-color: #F2F2F2;
+            padding: 2px 4px;
+            font-size: 10pt;
+            border-radius: 3px;
+        }
+        pre {
+            font-family: 'Consolas', 'Courier New', monospace;
+            background-color: #F2F2F2;
+            padding: 10px;
+            border-left: 3px solid #1F4E79;
+            font-size: 10pt;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+        th, td {
+            border: 1px solid #D3D3D3;
+            padding: 8px 12px;
+            text-align: left;
+            font-size: 10pt;
+        }
+        th {
+            background-color: #1F4E79;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #F9F9F9;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .title-page {
+            text-align: center;
+            padding-top: 100px;
+            padding-bottom: 100px;
+        }
+        .title-page h1 {
+            font-size: 36pt;
+            border: none;
+            margin-bottom: 10px;
+        }
+        .title-page .subtitle {
+            font-size: 18pt;
+            color: #555;
+            margin-bottom: 50px;
+        }
+        .page-break {
+            page-break-before: always;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- Title Page -->
+    <div class="title-page">
+        <h1>GlimSync 📸</h1>
+        <div class="subtitle">AI-Powered Event Media Management & Auto-Tagging Platform</div>
+        <p><strong>Complete Project Documentation</strong></p>
+        <p>Prepared for Project Submission & Deployment</p>
+        <p>Live Demo: <a href="https://event-management-glimsync-cig.vercel.app/" target="_blank">https://event-management-glimsync-cig.vercel.app/</a></p>
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- Overview -->
+    <h1>1. Project Overview & Key Features</h1>
+    <p><strong>GlimSync</strong> is a cutting-edge, AI-powered platform designed for photographers and event organizers to effortlessly manage event media, auto-tag guests using facial recognition, and automatically generate smart captions and tags for photos using advanced AI models.</p>
+    
+    <h2>✨ Key Features</h2>
+    <ul>
+        <li><strong>Smart Auto-Tagging:</strong> Automatically detects and tags guests in photos using client-side facial recognition (<code>face-api.js</code>).</li>
+        <li><strong>AI Media Analysis:</strong> Generates automatic captions and smart tags for uploaded images using Google Gemini AI (<code>@google/generative-ai</code>).</li>
+        <li><strong>Event Galleries:</strong> Create private or public events, upload media, and organize them into folders.</li>
+        <li><strong>Social Interactions:</strong> Like, comment, favorite, and share photos effortlessly.</li>
+        <li><strong>Instant Notifications:</strong> Get notified when you are tagged, or when someone interacts with your uploads.</li>
+    </ul>
+
+    <h2>🛠️ Tech Stack</h2>
+    <ul>
+        <li><strong>Frontend:</strong> Next.js 14, React 19, Tailwind CSS (Vanilla CSS structure), Lucide Icons</li>
+        <li><strong>Backend:</strong> Next.js App Router (API Routes)</li>
+        <li><strong>Database:</strong> MySQL, Prisma ORM</li>
+        <li><strong>Authentication:</strong> NextAuth.js (Credentials/Session based)</li>
+        <li><strong>AI & ML:</strong>
+            <ul>
+                <li><code>@vladmandic/face-api</code> (Client-side Facial Recognition)</li>
+                <li><code>@google/generative-ai</code> (Gemini Pro Vision for image analysis)</li>
+            </ul>
+        </li>
+        <li><strong>Storage:</strong> Cloudinary</li>
+    </ul>
+
+    <div class="page-break"></div>
+
+    <!-- Architecture -->
+    <h1>2. System Architecture & Flow</h1>
+    <p>Below is the system flow architecture describing client interactions with authentication, database models, Cloudinary storage, and AI processing nodes:</p>
+    
+    <pre>
++-------------------------------------------------------------+
+|                     Client (Next.js/React)                  |
++-------------------------------------------------------------+
+       |                  |                    |
+       | (Session Auth)   | (Direct Upload)    | (Face Detection)
+       v                  v                    v
++--------------+   +--------------+   +-----------------------+
+|  NextAuth    |   |  Cloudinary  |   | face-api.js (Client)  |
++--------------+   +--------------+   +-----------------------+
+       |                  |                    |
+       |                  |                    | (Embeddings)
+       v                  v                    v
++-------------------------------------------------------------+
+|                 Prisma ORM & MySQL Database                 |
++-------------------------------------------------------------+
+                               ^
+                               | (Smart Captions & Tags)
+                        +--------------+
+                        | Google Gemini|
+                        +--------------+
+    </pre>
+
+    <h3>Core Layer Descriptions</h3>
+    <ul>
+        <li><strong>Client Layer:</strong> Runs face detection locally on the client's browser, fetching facial markers using <code>face-api.js</code>. This minimizes server latency and computes face signatures client-side.</li>
+        <li><strong>Storage Layer:</strong> Cloudinary manages real-time optimization, image hosting, and fast content delivery (CDN).</li>
+        <li><strong>AI Layer:</strong> The backend queries the Google Gemini Vision model asynchronously on upload to auto-generate context-aware tags and descriptions.</li>
+    </ul>
+
+    <div class="page-break"></div>
+
+    <!-- Database Schema -->
+    <h1>3. Database Schema & Relationships</h1>
+    <p>The database layer uses Prisma ORM on a MySQL instance. The primary data models are outlined below:</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Entity</th>
+                <th>Description</th>
+                <th>Key Relationships</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>User</strong></td>
+                <td>Stores user info, role (ADMIN, PHOTOGRAPHER, VIEWER), and biometric face encoding strings.</td>
+                <td>One-to-many with Event, Media, Comment, Like, Favorite, UserTag.</td>
+            </tr>
+            <tr>
+                <td><strong>Event</strong></td>
+                <td>Organizes groups of photos under a specific date/privacy setting.</td>
+                <td>One-to-many with Folders and Media files.</td>
+            </tr>
+            <tr>
+                <td><strong>Media</strong></td>
+                <td>Represents uploaded files, storing CDN links and AI-generated captions.</td>
+                <td>Belongs to Event, Folder, and User. Many-to-many with Tags.</td>
+            </tr>
+            <tr>
+                <td><strong>Comment / Like</strong></td>
+                <td>Tracks standard community reactions on individual photos.</td>
+                <td>Linked directly to User and Media models.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="page-break"></div>
+
+    <!-- Setup Guide -->
+    <h1>4. Local Setup & Configuration Guide</h1>
+    
+    <h2>💻 Installation</h2>
+    <p>Follow these steps to run the application locally on your developer machine:</p>
+    
+    <pre>
+# 1. Clone repository
+git clone https://github.com/chanchal624/event-management-Glimsync-CIG.git
+cd event-management-Glimsync-CIG
+
+# 2. Install package dependencies
+npm install
+    </pre>
+
+    <h2>⚙️ Environment Configurations (.env)</h2>
+    <p>Create a <code>.env</code> file in the project's root folder and populate the following keys:</p>
+    <pre>
+DATABASE_URL="mysql://username:password@localhost:3306/glimsync_db"
+NEXTAUTH_SECRET="your-32-character-secret"
+NEXTAUTH_URL="http://localhost:3000"
+CLOUDINARY_CLOUD_NAME="your_cloudinary_cloud_name"
+CLOUDINARY_API_KEY="your_cloudinary_api_key"
+CLOUDINARY_API_SECRET="your_cloudinary_api_secret"
+GEMINI_API_KEY="your_google_gemini_api_key"
+    </pre>
+
+    <h2>🚀 Running Database Migrations & Server</h2>
+    <pre>
+# Generate prisma client and push schema structure to database
+npx prisma generate
+npx prisma db push
+
+# Start the dev server
+npm run dev
+    </pre>
+    <p>Your local app is now running at: <strong>http://localhost:3000</strong></p>
+
+</div>
+</body>
+</html>
