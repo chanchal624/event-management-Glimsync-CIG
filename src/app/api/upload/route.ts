@@ -154,8 +154,8 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json(media, { status: 201 });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Upload Error:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json({ error: error?.message || "Internal Server Error" }, { status: 500 });
   }
 }
