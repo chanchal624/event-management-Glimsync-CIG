@@ -5,12 +5,35 @@
 ## 🚀 Live Demo
 **[Working Deployed Project / Demo](https://event-management-glimsync-cig.vercel.app/)**
 
-## ✨ Key Features
-- **Smart Auto-Tagging:** Automatically detects and tags guests in photos using client-side facial recognition (`face-api.js`).
-- **AI Media Analysis:** Generates automatic captions and smart tags for uploaded images using Google Gemini AI (`@google/generative-ai`).
-- **Event Galleries:** Create private or public events, upload media, and organize them into folders.
-- **Social Interactions:** Like, comment, favorite, and share photos effortlessly.
-- **Instant Notifications:** Get notified when you are tagged, or when someone interacts with your uploads.
+---
+
+## 📦 Project Deliverables & Implemented Features
+
+This section log documents the specialized UI/UX refinements, core AI features, and system architecture updates completed for this project:
+
+### 1. Branding & Color Scheme
+- **Logo Color Split:** Updated the main navbar logo to separate `"GlimSync"` into:
+  - **Glim** styled in **dark navy blue** (`#1e3a8a`).
+  - **Sync** styled in **solid black** (`#000000`).
+- **Navbar Layout Correction:** Corrected active session state handling to prevent overlapping login/register buttons when a user is already authenticated. The navbar now shows *only* the user profile badge when logged in.
+
+### 2. Visual Feed Optimization
+- **4-Column Responsive Layout:** Re-engineered the media query breakpoints across all galleries (Gallery Feed, Downloads, Tagged, and Favorites) to trigger 4 columns starting at viewport widths of `768px`/`800px` (guaranteeing 4 columns even under high-DPI Windows display scaling).
+- **Zoomed Out Grid Aesthetic:** Shrunk gallery card image height from `280px` to `200px`/`210px` to create a polished, clean, and zoomed-out grid visual structure.
+- **Star Icon Repositioning:** Moved the favorite star icon from the top overlay down to the bottom actions bar on gallery cards next to the comment and like buttons.
+
+### 3. Folder & Event Management
+- **Role-Based Upload Actions:** Locked upload and directory creation/deletion tools strictly to event organizers or uploaders.
+- **Bulk Action Support:** Implemented download and delete actions for both entire events (all media and subfolders) and individual subfolders. Bulk operations gather and generate downloadable zip packages.
+
+### 4. Robust SVG Watermarking
+- **Vercel Rendering Fixes:** Re-designed the SVG watermark overlays on downloaded media using simple, cross-platform `<rect>` backgrounds and clean `Arial` system typography, resolving build-related gradient and custom font loading errors on headless Linux instances.
+
+### 5. Admin Control & Database
+- **Administrator Role:** Implemented backend security checking for `"ADMIN"` users on control panel endpoints (`/admin`).
+- **Default Database Admin Account:** Seeded and configured a production admin account:
+  - **Email:** `admin@glimsync.com`
+  - **Password:** `adminpassword123`
 
 ---
 
@@ -24,7 +47,7 @@ graph TD
     Storage["Cloudinary (Media Storage)"]
     AI_Face["Face Recognition (face-api.js)"]
     AI_Vision["AI Vision Analysis (Google Gemini)"]
-
+ 
     Client -->|Login / Session| Auth
     Auth --> DB
     Client -->|Upload Images| Storage
@@ -63,7 +86,7 @@ erDiagram
     MEDIA ||--o{ USER_TAG : includes_users
     
     TAG ||--o{ MEDIA_TAG : applies_to
-
+ 
     USER {
         string id PK
         string name
@@ -91,7 +114,7 @@ erDiagram
 ```
 
 ### Core Entities:
-- **User:** Manages roles (ADMIN, PHOTOGRAPHER, VIEWER), stores encrypted face encodings for recognition, and tracks interactions.
+- **User:** Manages roles (`ADMIN`, `PHOTOGRAPHER`, `VIEWER`), stores encrypted face encodings for recognition, and tracks user actions.
 - **Event:** Represents a collection of media, can be public or private, and contains sub-folders.
 - **Media:** The central entity storing the Cloudinary URL, AI-generated metadata (captions), and links to tags, comments, likes, and folders.
 - **Tags & UserTags:** Bridges for standard keyword tags and AI-identified users respectively.

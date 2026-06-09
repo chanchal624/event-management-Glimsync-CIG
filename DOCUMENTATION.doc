@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>GlimSync Project Documentation</title>
+    <title>GlimSync Project Documentation & Deliverables</title>
     <style>
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
@@ -48,6 +48,7 @@
             overflow-x: auto;
             white-space: pre-wrap;
             word-wrap: break-word;
+            line-height: 1.2;
         }
         table {
             border-collapse: collapse;
@@ -99,24 +100,28 @@
     <div class="title-page">
         <h1>GlimSync 📸</h1>
         <div class="subtitle">AI-Powered Event Media Management & Auto-Tagging Platform</div>
-        <p><strong>Complete Project Documentation</strong></p>
+        <p><strong>Complete Project Documentation & Implemented Deliverables</strong></p>
         <p>Prepared for Project Submission & Deployment</p>
         <p>Live Demo: <a href="https://event-management-glimsync-cig.vercel.app/" target="_blank">https://event-management-glimsync-cig.vercel.app/</a></p>
     </div>
 
     <div class="page-break"></div>
 
-    <!-- Overview -->
-    <h1>1. Project Overview & Key Features</h1>
+    <!-- Overview & Deliverables -->
+    <h1>1. Project Overview & Implemented Deliverables</h1>
     <p><strong>GlimSync</strong> is a cutting-edge, AI-powered platform designed for photographers and event organizers to effortlessly manage event media, auto-tag guests using facial recognition, and automatically generate smart captions and tags for photos using advanced AI models.</p>
     
-    <h2>✨ Key Features</h2>
+    <h2>✨ Implemented Deliverables Log</h2>
+    <p>The following features and visual fixes have been fully implemented and verified in the current production release:</p>
     <ul>
-        <li><strong>Smart Auto-Tagging:</strong> Automatically detects and tags guests in photos using client-side facial recognition (<code>face-api.js</code>).</li>
-        <li><strong>AI Media Analysis:</strong> Generates automatic captions and smart tags for uploaded images using Google Gemini AI (<code>@google/generative-ai</code>).</li>
-        <li><strong>Event Galleries:</strong> Create private or public events, upload media, and organize them into folders.</li>
-        <li><strong>Social Interactions:</strong> Like, comment, favorite, and share photos effortlessly.</li>
-        <li><strong>Instant Notifications:</strong> Get notified when you are tagged, or when someone interacts with your uploads.</li>
+        <li><strong>Branding Color Split:</strong> The navbar logo text has been customized to split <code>GlimSync</code> into <strong>Glim</strong> (styled in dark navy blue: <code>#1e3a8a</code>) and <strong>Sync</strong> (styled in solid black: <code>#000000</code>).</li>
+        <li><strong>Header Session Layout Fix:</strong> Corrected session logic so that redundant login/register buttons are hidden when a user session is active, showing only the authenticated user profile badge.</li>
+        <li><strong>4-Column Feed Layout:</strong> Optimized gallery feeds (Gallery Feed, Downloads, Tagged, and Favorites) to output exactly 4 columns in a row starting at viewport widths of <code>768px</code>/<code>800px</code>, preventing 3-column fallback due to high-DPI Windows display scaling.</li>
+        <li><strong>Zoomed Out Aesthetic:</strong> Shrunk gallery card image height from <code>280px</code> to <code>200px</code>/<code>210px</code> for a unified, zoomed-out visual feed structure.</li>
+        <li><strong>Star Icon Repositioning:</strong> Moved the favorite star icon to the bottom actions bar on gallery cards, next to likes and comments.</li>
+        <li><strong>Folder/Event Management Controls:</strong> Added download and delete capabilities for events and subfolders, restricting deletion access strictly to the uploader.</li>
+        <li><strong>Watermarking System:</strong> Implemented robust SVG watermarking utilizing system-compatible Arial fonts and simple vector rectangle backgrounds to ensure reliable background image composite rendering on Vercel instances.</li>
+        <li><strong>Admin dashboard Integration:</strong> Configured admin routes (<code>/admin</code>) and seeded a default system admin account (<code>admin@glimsync.com</code> / <code>adminpassword123</code>).</li>
     </ul>
 
     <h2>🛠️ Tech Stack</h2>
