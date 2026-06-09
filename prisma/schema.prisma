@@ -1,0 +1,172 @@
+generator client {
+  provider = "prisma-client-js"
+  engineType = "library"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  PHOTOGRAPHER
+  CLUB_MEMBER
+  VIEWER
+}
+
+model User {
+  id                  String   @id @default(uuid())
+  name                String
+  email               String   @unique
+  passwordHash        String
+  role                Role     @default(VIEWER)
+  referenceImageUrl   String?
+  faceEncodingId      String?  @db.Text
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  eventsCreated       Event[]
+  mediaUploaded       Media[]
+  likes               Like[]
+  comments            Comment[]
+  favorites           Favorite[]
+  taggedIn            UserTag[]  @relation("TaggedUser")
+  tagsCreated         UserTag[]  @relation("Tagger")
+
+  notificationsReceived Notification[] @relation("Receiver")
+  notificationsTriggered Notification[] @relation("Actor")
+  downloads           Download[]
+}
+
+model Event {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  date        DateTime
+  category    String
+  location    String?
+  coverImage  String?
+  isPrivate   Boolean  @default(false)
+  createdById String
+  createdBy   User     @relation(fields: [createdById], references: [id])
+  media       Media[]
+  folders     Folder[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Media {
+  id          String   @id @default(uuid())
+  eventId     String
+  uploaderId  String
+  s3Url       String
+  isPrivate   Boolean  @default(false)
+  uploadDate  DateTime @default(now())
+  sharesCount Int      @default(0)
+  metadata    Json?
+  folderId    String?
+
+  event       Event    @relation(fields: [eventId], references: [id])
+  folder      Folder?  @relation(fields: [folderId], references: [id])
+  uploader    User     @relation(fields: [uploaderId], references: [id])
+  
+  tags        MediaTag[]
+  likes       Like[]
+  comments    Comment[]
+  favorites   Favorite[]
+  userTags    UserTag[]
+  notifications Notification[]
+  downloads   Download[]
+}
+
+model Folder {
+  id        String   @id @default(uuid())
+  name      String
+  eventId   String
+  createdAt DateTime @default(now())
+
+  event     Event    @relation(fields: [eventId], references: [id])
+  media     Media[]
+}
+
+model Download {
+  id        String   @id @default(uuid())
+  userId    String
+  mediaId   String
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id])
+  media     Media    @relation(fields: [mediaId], references: [id])
+
+  @@index([userId])
+}
+
+model Tag {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  mediaTags MediaTag[]
+}
+
+model MediaTag {
+  mediaId String
+  tagId   String
+  media   Media @relation(fields: [mediaId], references: [id])
+  tag     Tag   @relation(fields: [tagId], references: [id])
+
+  @@id([mediaId, tagId])
+}
+
+model Like {
+  userId  String
+  mediaId String
+  user    User  @relation(fields: [userId], references: [id])
+  media   Media @relation(fields: [mediaId], references: [id])
+
+  @@id([userId, mediaId])
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  userId    String
+  mediaId   String
+  content   String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  media     Media    @relation(fields: [mediaId], references: [id])
+}
+
+model Favorite {
+  userId  String
+  mediaId String
+  user    User  @relation(fields: [userId], references: [id])
+  media   Media @relation(fields: [mediaId], references: [id])
+
+  @@id([userId, mediaId])
+}
+
+model UserTag {
+  id           String @id @default(uuid())
+  taggedUserId String
+  mediaId      String
+  taggedById   String
+  isAiGenerated Boolean @default(false)
+  
+  taggedUser   User   @relation("TaggedUser", fields: [taggedUserId], references: [id])
+  tagger       User   @relation("Tagger", fields: [taggedById], references: [id])
+  media        Media  @relation(fields: [mediaId], references: [id])
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  actorId   String
+  type      String
+  mediaId   String?
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user      User     @relation("Receiver", fields: [userId], references: [id])
+  actor     User     @relation("Actor", fields: [actorId], references: [id])
+  media     Media?   @relation(fields: [mediaId], references: [id])
+}
