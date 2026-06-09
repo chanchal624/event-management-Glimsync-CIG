@@ -168,6 +168,7 @@ export async function DELETE(
     }
 
     await prisma.media.deleteMany({ where: { eventId: id } });
+    await prisma.folder.deleteMany({ where: { eventId: id } });
     await prisma.event.delete({ where: { id } });
 
     return NextResponse.json({ success: true }, { status: 200 });

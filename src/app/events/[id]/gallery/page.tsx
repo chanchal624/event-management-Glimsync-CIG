@@ -6,6 +6,7 @@ import { createPortal } from "react-dom";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { Download, Folder, Plus, Sparkles, X, Heart, MessageCircle, Share2, CloudUpload, ArrowLeft, Trash2 } from "lucide-react";
+import JSZip from "jszip";
 
 interface MediaItem {
   id: string;
@@ -77,6 +78,105 @@ export default function EventGalleryPage() {
   };
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const [downloadingZip, setDownloadingZip] = useState(false);
+  const [zipProgress, setZipProgress] = useState("");
+
+  const handleDownloadAll = async () => {
+    const activeMediaItems = media.filter(item => 
+      activeFolderId === null ? true : item.folderId === activeFolderId
+    );
+
+    if (activeMediaItems.length === 0) {
+      alert("No media to download!");
+      return;
+    }
+
+    try {
+      setDownloadingZip(true);
+      setZipProgress("Starting download...");
+
+      const zip = new JSZip();
+
+      for (let i = 0; i < activeMediaItems.length; i++) {
+        const item = activeMediaItems[i];
+        setZipProgress(`Downloading photo ${i + 1} of ${activeMediaItems.length}...`);
+        
+        const res = await fetch(`/api/download/${item.id}`);
+        if (!res.ok) throw new Error(`Failed to download media ${item.id}`);
+        const blob = await res.blob();
+        
+        const extension = item.s3Url.split('.').pop()?.split('?')[0] || "jpg";
+        const filename = `photo_${item.id}.${extension}`;
+        
+        zip.file(filename, blob);
+      }
+
+      setZipProgress("Generating ZIP file...");
+      const content = await zip.generateAsync({ type: "blob" });
+      
+      setZipProgress("Saving ZIP file...");
+      const folderName = activeFolderId === null 
+        ? "event_gallery" 
+        : (folders.find(f => f.id === activeFolderId)?.name || "folder_gallery");
+      
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(content);
+      link.download = `${folderName}.zip`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      setZipProgress("");
+      alert("ZIP file downloaded successfully!");
+    } catch (err: any) {
+      console.error(err);
+      alert(`Failed to download: ${err.message}`);
+    } finally {
+      setDownloadingZip(false);
+    }
+  };
+
+  const handleDeleteAll = async () => {
+    const isFolder = activeFolderId !== null;
+    const confirmMessage = isFolder
+      ? "Are you sure you want to delete this folder and ALL photos inside it?"
+      : "Are you sure you want to delete this event, ALL its folders, and ALL its photos? This action cannot be undone.";
+
+    if (!confirm(confirmMessage)) return;
+
+    try {
+      setLoading(true);
+      if (isFolder) {
+        const res = await fetch(`/api/events/${eventId}/folders?folderId=${activeFolderId}`, {
+          method: "DELETE"
+        });
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.error || "Failed to delete folder");
+        }
+        
+        setFolders(prev => prev.filter(f => f.id !== activeFolderId));
+        setMedia(prev => prev.filter(item => item.folderId !== activeFolderId));
+        setActiveFolderId(null);
+        alert("Folder deleted successfully!");
+      } else {
+        const res = await fetch(`/api/events/${eventId}`, {
+          method: "DELETE"
+        });
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.error || "Failed to delete event");
+        }
+        alert("Event deleted successfully!");
+        router.push("/events");
+      }
+    } catch (err: any) {
+      alert(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -397,10 +497,68 @@ export default function EventGalleryPage() {
         <ArrowLeft size={16} /> Back to Events
       </button>
 
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "3rem" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "3rem" }}>
         <div>
-          <h1 className="hero-title" style={{ fontSize: "2rem", marginBottom: "0.5rem", letterSpacing: "-0.5px" }}>Event Gallery</h1>
+          <h1 className="hero-title" style={{ fontSize: "2rem", marginBottom: "0.5rem", letterSpacing: "-0.5px" }}>
+            {activeFolderId === null 
+              ? "Event Gallery" 
+              : `Folder: ${folders.find(f => f.id === activeFolderId)?.name || "Folder"}`}
+          </h1>
+          {zipProgress && (
+            <p style={{ fontSize: "0.85rem", color: "#6366f1", margin: 0, fontWeight: "600" }}>
+              ⏳ {zipProgress}
+            </p>
+          )}
+        </div>
 
+        <div style={{ display: "flex", gap: "0.75rem", alignItems: "center" }}>
+          <button
+            onClick={handleDownloadAll}
+            disabled={downloadingZip || media.length === 0}
+            className="hover-scale"
+            style={{
+              background: "var(--glass-bg)",
+              border: "1px solid var(--glass-border)",
+              color: "#475569",
+              width: "40px",
+              height: "40px",
+              borderRadius: "50%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: (downloadingZip || media.length === 0) ? "default" : "pointer",
+              opacity: (downloadingZip || media.length === 0) ? 0.5 : 1,
+              transition: "transform 0.1s ease"
+            }}
+            title={activeFolderId === null ? "Download Whole Event" : "Download Subfolder"}
+          >
+            <Download size={18} />
+          </button>
+
+          {(canUpload || currentUser?.role === "ADMIN") && (
+            <button
+              onClick={handleDeleteAll}
+              disabled={downloadingZip}
+              className="hover-scale"
+              style={{
+                background: "rgba(239, 68, 68, 0.1)",
+                border: "1px solid rgba(239, 68, 68, 0.2)",
+                color: "#ef4444",
+                width: "40px",
+                height: "40px",
+                borderRadius: "50%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: downloadingZip ? "default" : "pointer",
+                opacity: downloadingZip ? 0.5 : 1,
+                transition: "transform 0.1s ease"
+              }}
+              title={activeFolderId === null ? "Delete Whole Event" : "Delete Subfolder"}
+            >
+              <Trash2 size={18} />
+            </button>
+          )}
         </div>
       </div>
 
