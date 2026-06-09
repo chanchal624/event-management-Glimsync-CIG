@@ -55,6 +55,7 @@ export default function EventGalleryPage() {
   const [error, setError] = useState("");
   const [media, setMedia] = useState<MediaItem[]>([]);
   const [canUpload, setCanUpload] = useState(false);
+  const [currentUser, setCurrentUser] = useState<any>(null);
 
   const [folders, setFolders] = useState<Folder[]>([]);
   const [activeFolderId, setActiveFolderId] = useState<string | null>(null);
@@ -111,6 +112,7 @@ export default function EventGalleryPage() {
 
         if (sessionRes.ok) {
           const sessionData = await sessionRes.json();
+          setCurrentUser(sessionData?.user || null);
           if (sessionData?.user?.id === data.createdById) {
             setCanUpload(true);
           }
@@ -242,7 +244,15 @@ export default function EventGalleryPage() {
           const errData = await res.json();
           throw new Error(`Failed to upload ${staged.file.name}: ${errData.error || res.statusText}`);
         }
-        uploadedMedia.push(await res.json());
+        const newMediaObj = await res.json();
+        if (currentUser) {
+          newMediaObj.uploader = {
+            id: currentUser.id || "",
+            name: currentUser.name || "",
+            email: currentUser.email || ""
+          };
+        }
+        uploadedMedia.push(newMediaObj);
       }
       setMedia(prev => [...uploadedMedia, ...prev]);
 
@@ -288,15 +298,27 @@ export default function EventGalleryPage() {
   };
 
   const loadComments = async (mediaId: string) => {
-    if (activeCommentId === mediaId) {
-      setActiveCommentId(null);
-      return;
-    }
     setActiveCommentId(mediaId);
     setComments([]);
-    const res = await fetch(`/api/media/${mediaId}/comments`);
-    if (res.ok) setComments(await res.json());
+    try {
+      const res = await fetch(`/api/media/${mediaId}/comments`);
+      if (res.ok) {
+        const data = await res.json();
+        setComments(data);
+      }
+    } catch (e) {
+      console.error("Failed to load comments:", e);
+    }
   };
+
+  useEffect(() => {
+    if (selectedIndex !== null && media[selectedIndex]) {
+      loadComments(media[selectedIndex].id);
+    } else {
+      setComments([]);
+      setActiveCommentId(null);
+    }
+  }, [selectedIndex, media]);
 
   const postComment = async (e: React.FormEvent, mediaId: string) => {
     e.preventDefault();
@@ -706,8 +728,8 @@ export default function EventGalleryPage() {
             </div>
 
             <div style={{ flex: 1, overflowY: "auto", padding: "1.5rem", display: "flex", flexDirection: "column", gap: "1rem" }}>
-              {(currentMedia.comments?.length ?? 0) > 0 ? (
-                currentMedia.comments?.map((c: any) => (
+              {(comments?.length ?? 0) > 0 ? (
+                comments?.map((c: any) => (
                   <div key={c.id} style={{ display: "flex", gap: "0.75rem" }}>
                     <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: "var(--glass-border)", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold", fontSize: "0.8rem", color: "#475569" }}>
                       {c.user?.name ? c.user.name.charAt(0).toUpperCase() : "U"}

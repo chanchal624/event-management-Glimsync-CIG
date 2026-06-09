@@ -31,14 +31,22 @@ export async function GET(
       return NextResponse.json({ error: "Unauthorized: Event is private" }, { status: 401 });
     }
 
-    const filePath = path.join(process.cwd(), "public", media.s3Url);
-
     let originalBuffer: Buffer;
     try {
-      originalBuffer = await fs.readFile(filePath);
+      if (media.s3Url.startsWith("http://") || media.s3Url.startsWith("https://")) {
+        const response = await fetch(media.s3Url);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch image: ${response.statusText}`);
+        }
+        const arrayBuffer = await response.arrayBuffer();
+        originalBuffer = Buffer.from(arrayBuffer);
+      } else {
+        const filePath = path.join(process.cwd(), "public", media.s3Url);
+        originalBuffer = await fs.readFile(filePath);
+      }
     } catch (err) {
-      console.error("File not found on disk:", filePath);
-      return NextResponse.json({ error: "File not found on server" }, { status: 404 });
+      console.error("Failed to load image file:", err);
+      return NextResponse.json({ error: "File not found or unreachable" }, { status: 404 });
     }
 
     const imageInfo = await sharp(originalBuffer).metadata();
