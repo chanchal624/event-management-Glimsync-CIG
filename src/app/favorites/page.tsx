@@ -51,8 +51,8 @@ export default function FavoritesPage() {
       </div>
 
       <div style={{ marginBottom: "3rem" }}>
-        <h1 className="hero-title" style={{ fontSize: "3rem", marginBottom: "0.5rem" }}>My Favorites</h1>
-        <p className="hero-subtitle" style={{ marginBottom: "0" }}>All your starred images in one place</p>
+        <h1 className="hero-title" style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>My Favorites</h1>
+        <p className="hero-subtitle" style={{ fontSize: "0.9rem", color: "#64748b", marginBottom: "0" }}>All your starred images in one place</p>
       </div>
 
       {error && <div style={{ padding: "1rem", color: "red", border: "1px solid red", marginBottom: "2rem" }}>{error}</div>}
@@ -70,7 +70,7 @@ export default function FavoritesPage() {
                 <img src={item.s3Url} alt="Media" style={{ objectFit: "cover", width: "100%", height: "100%" }} />
               </div>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ fontSize: "0.9rem", color: "#475569", fontWeight: "600" }}>{item.event?.name}</span>
+                <span style={{ fontSize: "0.8rem", color: "#475569", fontWeight: "600" }}>{item.event?.name}</span>
                 <a
                   href={`/api/download/${item.id}`}
                   className="hover-scale"

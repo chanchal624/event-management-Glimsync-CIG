@@ -38,8 +38,8 @@ export default function DownloadsPage() {
       </div>
 
       <div style={{ marginBottom: "3rem" }}>
-        <h1 className="hero-title" style={{ fontSize: "3rem", marginBottom: "0.5rem" }}>My Downloads</h1>
-        <p className="hero-subtitle" style={{ marginBottom: "0" }}>
+        <h1 className="hero-title" style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>My Downloads</h1>
+        <p className="hero-subtitle" style={{ fontSize: "0.9rem", color: "#64748b", marginBottom: "0" }}>
           A record of all the memories you've saved to your device.
         </p>
       </div>
@@ -77,10 +77,10 @@ export default function DownloadsPage() {
                   </div>
                 </div>
                 <div style={{ padding: "1rem", background: "var(--bg-secondary)" }}>
-                  <p style={{ margin: "0 0 0.5rem 0", fontWeight: "bold" }}>
+                  <p style={{ margin: "0 0 0.4rem 0", fontWeight: "bold", fontSize: "0.85rem" }}>
                     Downloaded on {new Date(item.downloadDate).toLocaleDateString()}
                   </p>
-                  <p style={{ margin: 0, fontSize: "0.85rem", color: "#475569" }}>
+                  <p style={{ margin: 0, fontSize: "0.75rem", color: "#475569" }}>
                     Uploaded by {item.media.uploader.name || "Unknown"}
                   </p>
                 </div>

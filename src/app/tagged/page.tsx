@@ -55,8 +55,8 @@ export default function TaggedPage() {
       </div>
 
       <div style={{ marginBottom: "3rem" }}>
-        <h1 className="hero-title" style={{ fontSize: "3rem", marginBottom: "0.5rem" }}>Tagged Photos</h1>
-        <p className="hero-subtitle" style={{ marginBottom: "0" }}>Images where other users have manually tagged you</p>
+        <h1 className="hero-title" style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>Tagged Photos</h1>
+        <p className="hero-subtitle" style={{ fontSize: "0.9rem", color: "#64748b", marginBottom: "0" }}>Images where other users have manually tagged you</p>
       </div>
 
       {error && <div style={{ padding: "1rem", color: "red", border: "1px solid red", marginBottom: "2rem" }}>{error}</div>}
@@ -75,12 +75,12 @@ export default function TaggedPage() {
               </div>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-                  <Link href={`/events/${item.media.event?.id}/gallery`} style={{ fontSize: "0.9rem", color: "#0f172a", fontWeight: "600", textDecoration: "none" }}>
+                  <Link href={`/events/${item.media.event?.id}/gallery`} style={{ fontSize: "0.8rem", color: "#0f172a", fontWeight: "600", textDecoration: "none" }}>
                     <span style={{ cursor: "pointer" }} onMouseOver={e => e.currentTarget.style.textDecoration = "underline"} onMouseOut={e => e.currentTarget.style.textDecoration = "none"}>
                       {item.media.event?.name}
                     </span>
                   </Link>
-                  <span style={{ fontSize: "0.85rem", color: "#475569" }}>
+                  <span style={{ fontSize: "0.75rem", color: "#475569" }}>
                     🏷️ Tagged by <Link href={`/profile/${item.tagger.id}`} style={{ color: "#6366f1", fontWeight: "bold", textDecoration: "none" }}><span style={{ cursor: "pointer" }} onMouseOver={e => e.currentTarget.style.textDecoration = "underline"} onMouseOut={e => e.currentTarget.style.textDecoration = "none"}>{item.tagger.name || item.tagger.email}</span></Link>
                   </span>
                 </div>
