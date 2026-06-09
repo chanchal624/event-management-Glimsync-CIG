@@ -33,3 +33,18 @@ export async function uploadToCloudinary(
     uploadStream.end(buffer);
   });
 }
+
+export async function deleteFromCloudinary(url: string): Promise<any> {
+  try {
+    const parts = url.split("/upload/");
+    if (parts.length < 2) return null;
+    
+    const pathAndExt = parts[1].replace(/^v\d+\//, "");
+    const publicId = pathAndExt.substring(0, pathAndExt.lastIndexOf("."));
+
+    return await cloudinary.uploader.destroy(publicId);
+  } catch (error) {
+    console.error("Cloudinary destroy error:", error);
+    throw error;
+  }
+}

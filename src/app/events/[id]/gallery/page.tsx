@@ -5,7 +5,7 @@ import Link from "next/link";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
-import { Download, Folder, Plus, Sparkles, X, Heart, MessageCircle, Share2, CloudUpload, ArrowLeft } from "lucide-react";
+import { Download, Folder, Plus, Sparkles, X, Heart, MessageCircle, Share2, CloudUpload, ArrowLeft, Trash2 } from "lucide-react";
 
 interface MediaItem {
   id: string;
@@ -18,6 +18,7 @@ interface MediaItem {
   folderId?: string | null;
   userTags?: { taggedUser: { id: string; name: string; email: string; referenceImageUrl?: string } }[];
   uploader?: { id: string; name: string | null; email: string | null };
+  uploaderId?: string;
   uploadDate?: string | Date;
   comments?: any[];
 }
@@ -342,6 +343,27 @@ export default function EventGalleryPage() {
       }
     } catch (e) {
       alert("Error posting comment.");
+    }
+  };
+
+  const handleDeleteMedia = async (mediaId: string) => {
+    if (!confirm("Are you sure you want to delete this photo? This action cannot be undone.")) return;
+
+    try {
+      const res = await fetch(`/api/media/${mediaId}`, {
+        method: "DELETE"
+      });
+
+      if (res.ok) {
+        alert("Photo deleted successfully!");
+        setSelectedIndex(null); // Close the modal
+        setMedia(prev => prev.filter(m => m.id !== mediaId)); // Remove from media list
+      } else {
+        const err = await res.json();
+        alert(err.error || "Failed to delete photo");
+      }
+    } catch (e) {
+      alert("Error deleting photo.");
     }
   };
 
@@ -786,15 +808,27 @@ export default function EventGalleryPage() {
                   </button>
                 </div>
 
-                <a
-                  href={`/api/download/${currentMedia.id}`}
-                  className="hover-scale"
-                  style={{ background: "var(--glass-bg)", border: "1px solid var(--glass-border)", color: "#475569", width: "40px", height: "40px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", textDecoration: "none", transition: "transform 0.1s" }}
-                  title="Download"
-                  download
-                >
-                  <Download size={18} />
-                </a>
+                <div style={{ display: "flex", gap: "0.5rem" }}>
+                  {currentUser && currentMedia.uploaderId === currentUser.id && (
+                    <button
+                      onClick={() => handleDeleteMedia(currentMedia.id)}
+                      className="hover-scale"
+                      style={{ background: "rgba(239, 68, 68, 0.1)", border: "1px solid rgba(239, 68, 68, 0.2)", color: "#ef4444", width: "40px", height: "40px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "transform 0.1s" }}
+                      title="Delete Photo"
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  )}
+                  <a
+                    href={`/api/download/${currentMedia.id}`}
+                    className="hover-scale"
+                    style={{ background: "var(--glass-bg)", border: "1px solid var(--glass-border)", color: "#475569", width: "40px", height: "40px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", textDecoration: "none", transition: "transform 0.1s" }}
+                    title="Download"
+                    download
+                  >
+                    <Download size={18} />
+                  </a>
+                </div>
               </div>
 
               <div style={{ fontWeight: "bold", fontSize: "1rem", color: "#0f172a" }}>
