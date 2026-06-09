@@ -67,10 +67,10 @@ export default function TaggedPage() {
           <p>When someone tags you in a photo using your email, it will appear here.</p>
         </div>
       ) : (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "2rem" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: "2rem" }}>
           {tags.map((item) => (
             <div key={item.id} className="glass-panel" style={{ padding: "1rem", display: "flex", flexDirection: "column" }}>
-              <div style={{ position: "relative", width: "100%", height: "250px", borderRadius: "8px", overflow: "hidden", marginBottom: "1rem" }}>
+              <div style={{ position: "relative", width: "100%", height: "200px", borderRadius: "8px", overflow: "hidden", marginBottom: "1rem" }}>
                 <img src={item.media.s3Url} alt="Tagged Media" style={{ objectFit: "cover", width: "100%", height: "100%" }} />
               </div>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>

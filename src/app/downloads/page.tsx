@@ -66,7 +66,7 @@ export default function DownloadsPage() {
                 style={{ position: "relative", overflow: "hidden", borderRadius: "16px", cursor: "pointer" }}
                 onClick={() => setActiveMediaIndex(idx)}
               >
-                <div style={{ position: "relative", width: "100%", height: "250px" }}>
+                <div style={{ position: "relative", width: "100%", height: "200px" }}>
                   <img
                     src={item.media.s3Url}
                     alt="Downloaded item"
@@ -109,8 +109,9 @@ export default function DownloadsPage() {
         __html: `
         .masonry { column-count: 1; column-gap: 1.5rem; }
         @media (min-width: 480px) { .masonry { column-count: 2; } }
-        @media (min-width: 700px) { .masonry { column-count: 3; } }
-        @media (min-width: 900px) { .masonry { column-count: 4; } }
+        @media (min-width: 650px) { .masonry { column-count: 3; } }
+        @media (min-width: 800px) { .masonry { column-count: 4; } }
+        @media (min-width: 1200px) { .masonry { column-count: 5; } }
         .masonry-item { break-inside: avoid; margin-bottom: 1.5rem; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
       `}} />
