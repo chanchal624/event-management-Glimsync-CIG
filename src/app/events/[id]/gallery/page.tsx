@@ -535,7 +535,7 @@ export default function EventGalleryPage() {
             <Download size={18} />
           </button>
 
-          {(canUpload || currentUser?.role === "ADMIN") && (
+          {canUpload && (
             <button
               onClick={handleDeleteAll}
               disabled={downloadingZip}

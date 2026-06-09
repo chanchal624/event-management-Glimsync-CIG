@@ -55,8 +55,7 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
     const event = await prisma.event.findUnique({ where: { id } });
     if (!event) return NextResponse.json({ error: "Event not found" }, { status: 404 });
 
-    const isAdmin = hasRole(session.user.role, "ADMIN");
-    if (event.createdById !== session.user.id && !isAdmin) {
+    if (event.createdById !== session.user.id) {
       return NextResponse.json({ error: "Forbidden: Not your event" }, { status: 403 });
     }
 
