@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Search, Heart, MessageCircle, Share2, Download, X, ChevronLeft, ChevronRight, User } from "lucide-react";
+import { Search, Heart, MessageCircle, Share2, Download, X, ChevronLeft, ChevronRight, User, Star } from "lucide-react";
 
 import { createPortal } from "react-dom";
 
@@ -92,6 +92,26 @@ export default function PublicGallery() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ mediaId })
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleFavorite = async (mediaId: string, currentFav: boolean) => {
+    setMedia(prev => prev.map(m => {
+      if (m.id === mediaId) {
+        return {
+          ...m,
+          isFavoritedByMe: !currentFav
+        };
+      }
+      return m;
+    }));
+
+    try {
+      await fetch(`/api/media/${mediaId}/favorite`, {
+        method: "POST"
       });
     } catch (err) {
       console.error(err);
@@ -244,6 +264,33 @@ export default function PublicGallery() {
                         ))}
                       </div>
                     )}
+
+                    <button
+                      onClick={(e) => { e.stopPropagation(); handleFavorite(item.id, item.isFavoritedByMe); }}
+                      style={{
+                        position: "absolute",
+                        bottom: "1rem",
+                        right: "1rem",
+                        background: "rgba(255, 255, 255, 0.8)",
+                        backdropFilter: "blur(8px)",
+                        border: "1px solid rgba(255, 255, 255, 0.3)",
+                        borderRadius: "50%",
+                        width: "36px",
+                        height: "36px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: item.isFavoritedByMe ? "#eab308" : "#64748b",
+                        cursor: "pointer",
+                        boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                        transition: "transform 0.2s ease, background 0.2s ease",
+                        zIndex: 10
+                      }}
+                      className="hover-scale"
+                      title="Favorite"
+                    >
+                      <Star size={18} fill={item.isFavoritedByMe ? "#eab308" : "none"} strokeWidth={item.isFavoritedByMe ? 0 : 2} />
+                    </button>
                   </div>
 
                   <div style={{ padding: "1.25rem", flexGrow: 1, display: "flex", flexDirection: "column", background: "rgba(255,255,255,0.8)" }}>
@@ -519,14 +566,24 @@ export default function PublicGallery() {
                   </button>
                 </div>
 
-                <a
-                  href={`/api/download/${activeMedia.id}`}
-                  style={{ textDecoration: "none", background: "#f1f5f9", padding: "0.5rem 1rem", borderRadius: "9999px", fontSize: "0.9rem", color: "#334155", fontWeight: "600", display: "flex", alignItems: "center", gap: "0.5rem", transition: "background 0.2s" }}
-                  className="hover-bg-slate-200"
-                  download
-                >
-                  <Download size={16} /> Download
-                </a>
+                <div style={{ display: "flex", gap: "0.75rem", alignItems: "center" }}>
+                  <button
+                    onClick={() => handleFavorite(activeMedia.id, activeMedia.isFavoritedByMe)}
+                    style={{ background: "none", border: "none", cursor: "pointer", padding: 0, color: activeMedia.isFavoritedByMe ? "#eab308" : "#64748b", display: "flex", alignItems: "center", transition: "transform 0.15s ease" }}
+                    className="hover-scale"
+                    title="Favorite"
+                  >
+                    <Star size={26} fill={activeMedia.isFavoritedByMe ? "#eab308" : "none"} strokeWidth={activeMedia.isFavoritedByMe ? 0 : 2} />
+                  </button>
+                  <a
+                    href={`/api/download/${activeMedia.id}`}
+                    style={{ textDecoration: "none", background: "#f1f5f9", padding: "0.5rem 1rem", borderRadius: "9999px", fontSize: "0.9rem", color: "#334155", fontWeight: "600", display: "flex", alignItems: "center", gap: "0.5rem", transition: "background 0.2s" }}
+                    className="hover-bg-slate-200"
+                    download
+                  >
+                    <Download size={16} /> Download
+                  </a>
+                </div>
               </div>
 
               <div style={{ fontWeight: "700", fontSize: "1rem", color: "#0f172a" }}>
