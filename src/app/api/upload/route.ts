@@ -67,8 +67,8 @@ export async function POST(request: Request) {
       }
     }
 
-    const fileExt = file.name.split('.').pop();
-    const uniqueFilename = `events/${eventId}/${crypto.randomBytes(16).toString("hex")}.${fileExt}`;
+    const fileExt = file.name.split('.').pop() || "png";
+    const uniqueFilename = `${crypto.randomBytes(16).toString("hex")}.${fileExt}`;
 
     const cloudinaryUrl = await uploadToCloudinary(buffer, `events/${eventId}`, uniqueFilename);
 

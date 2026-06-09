@@ -60,7 +60,7 @@ model Media {
   id          String   @id @default(uuid())
   eventId     String
   uploaderId  String
-  s3Url       String
+  s3Url       String   @db.Text
   isPrivate   Boolean  @default(false)
   uploadDate  DateTime @default(now())
   sharesCount Int      @default(0)
