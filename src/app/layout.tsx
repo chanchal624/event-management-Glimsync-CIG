@@ -48,8 +48,11 @@ export default async function RootLayout({
         <Providers>
           <nav className="glass-panel" style={{ padding: '1rem 2rem', position: 'sticky', top: 0, zIndex: 100, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '3rem' }}>
-            <div style={{ fontSize: '1.8rem', fontWeight: '900', color: '#6366f1', letterSpacing: '-1px' }}>
-              <Link href="/" style={{ textDecoration: 'none', color: 'inherit' }}>GlimSync</Link>
+            <div style={{ fontSize: '1.8rem', fontWeight: '900', letterSpacing: '-1px' }}>
+              <Link href="/" style={{ textDecoration: 'none' }}>
+                <span style={{ color: '#1e3a8a' }}>Glim</span>
+                <span style={{ color: '#000000' }}>Sync</span>
+              </Link>
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
