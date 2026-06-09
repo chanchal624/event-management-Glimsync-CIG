@@ -56,24 +56,42 @@ export async function GET(
     const clubName = "GlimSync";
     const eventName = media.event.name;
     const userRole = session?.user?.role || "GUEST";
-    const watermarkText = `${clubName}  |  Event: ${eventName}  |  Role: ${userRole}`;
 
-    const bannerHeight = Math.max(60, Math.floor(height * 0.08));
-    const fontSize = Math.max(16, Math.floor(bannerHeight * 0.4));
-    const textY = height - (bannerHeight / 2) + (fontSize / 3);
+    const gradientHeight = Math.max(80, Math.floor(height * 0.12));
+    const brandSize = Math.max(20, Math.floor(height * 0.035));
+    const infoSize = Math.max(13, Math.floor(height * 0.022));
+    const textY = height - Math.max(25, Math.floor(height * 0.04));
 
     const svgOverlay = `
       <svg width="${width}" height="${height}">
+        <defs>
+          <filter id="text-shadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="1" dy="1" stdDeviation="2" flood-color="#000000" flood-opacity="0.8"/>
+          </filter>
+          <linearGradient id="bottom-fade" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stop-color="#000000" stop-opacity="0"/>
+            <stop offset="100%" stop-color="#000000" stop-opacity="0.8"/>
+          </linearGradient>
+        </defs>
         <style>
-          .watermark {
-            fill: rgba(255, 255, 255, 0.9);
-            font-size: ${fontSize}px;
-            font-family: Arial, Helvetica, sans-serif;
-            font-weight: bold;
+          .brand-text {
+            fill: #ffffff;
+            font-size: ${brandSize}px;
+            font-family: 'Outfit', 'Inter', sans-serif;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+          }
+          .info-text {
+            fill: #e2e8f0;
+            font-size: ${infoSize}px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            letter-spacing: 0.5px;
           }
         </style>
-        <rect x="0" y="${height - bannerHeight}" width="${width}" height="${bannerHeight}" fill="rgba(0,0,0,0.6)" />
-        <text x="30" y="${textY}" class="watermark">${watermarkText}</text>
+        <rect x="0" y="${height - gradientHeight}" width="${width}" height="${gradientHeight}" fill="url(#bottom-fade)" opacity="0.65" />
+        <text x="40" y="${textY}" class="info-text" filter="url(#text-shadow)">EVENT: ${eventName.toUpperCase()}  •  ROLE: ${userRole.toUpperCase()}</text>
+        <text x="${width - 40}" y="${textY}" text-anchor="end" class="brand-text" filter="url(#text-shadow)">${clubName.toUpperCase()}</text>
       </svg>
     `;
 
